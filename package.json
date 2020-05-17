@@ -1,15 +1,75 @@
 {
-  "name": "iste",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "next": "9.1.6",
-    "react": "16.12.0",
-    "react-dom": "16.12.0"
-  }
+    "name": "iste",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "relay": "npx relay-compiler --config=\"./relay.config.js\"",
+        "get-schema": "graphql get-schema",
+        "lint": "eslint pages --ext .ts,.tsx components --ext .ts,.tsx",
+        "format": "prettier --write \"{pages,components}/**/*.{ts,tsx}\"",
+        "dev": "next dev",
+        "build": "npm run relay && npx next build",
+        "start": "next start",
+        "commit": "npx git-cz",
+        "export": "npm run build && next export"
+    },
+    "dependencies": {
+        "@babel/plugin-transform-runtime": "^7.7.6",
+        "@material-ui/core": "^4.9.14",
+        "@material-ui/icons": "^4.5.1",
+        "@material-ui/lab": "^4.0.0-alpha.53",
+        "@material-ui/styles": "^4.7.1",
+        "clsx": "^1.0.4",
+        "dotenv": "^8.2.0",
+        "formik": "^2.1.2",
+        "js-cookie": "^2.2.1",
+        "next": "9.1.6",
+        "react": "16.12.0",
+        "react-dom": "^16.12.0",
+        "react-google-login": "^5.0.7",
+        "react-relay": "^8.0.0",
+        "react-relay-network-modern": "^4.4.0",
+        "react-scroll": "^1.7.15",
+        "relay-runtime": "^8.0.0",
+        "subscriptions-transport-ws": "^0.9.16",
+        "yup": "^0.28.0"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^8.2.0",
+        "@commitlint/config-conventional": "^8.2.0",
+        "@types/js-cookie": "^2.2.4",
+        "@types/node": "^12.12.21",
+        "@types/react": "^16.9.17",
+        "@types/react-relay": "^7.0.3",
+        "@types/relay-runtime": "^8.0.2",
+        "@types/yup": "^0.26.28",
+        "@typescript-eslint/eslint-plugin": "^2.12.0",
+        "@typescript-eslint/parser": "^2.12.0",
+        "babel-plugin-relay": "^8.0.0",
+        "babel-plugin-transform-import": "^1.5.4",
+        "babel-plugin-transform-imports": "^2.0.0",
+        "commitizen": "^4.0.3",
+        "cz-conventional-changelog": "^3.0.2",
+        "eslint": "^6.8.0",
+        "eslint-plugin-import": "^2.19.1",
+        "eslint-plugin-react": "^7.17.0",
+        "eslint-plugin-react-hooks": "^2.3.0",
+        "graphql": "^14.6.0",
+        "graphql-cli": "^3.0.14",
+        "husky": "^3.1.0",
+        "jest": "^24.9.0",
+        "prettier": "^1.19.1",
+        "react-gesture-gallery": "^1.1.0",
+        "react-gesture-responder": "^2.1.0",
+        "react-scripts": "^3.3.0",
+        "relay-compiler": "^8.0.0",
+        "relay-compiler-language-typescript": "^10.1.4",
+        "style": "0.0.3",
+        "typescript": "^3.7.4"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    }
 }
