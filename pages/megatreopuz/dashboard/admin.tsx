@@ -162,24 +162,95 @@ const AdminPanel: NextPage<AdminPanelProps> = ({
     questions,
     relay
 }) => {
-    if (!environment) return null;
     const classes = useStyles();
     const [quiz, setQuiz] = React.useState(false);
-
-    React.useEffect(() => {
-        setQuiz(state.active);
-    }, [state]);
     const [questionNo, setQuestionNo] = React.useState(Number);
     const [imgUrl, setImgUrl] = React.useState("");
     const [answer, setAnswer] = React.useState("");
     const [description, setDescription] = React.useState("");
     const [success, setSuccess] = React.useState(false);
+    const [update, setUpdate] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
     const [successMessage, setSuccessMessage] = React.useState("");
+    const [delOpen, setDelOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        setQuiz(state.active);
+    }, [state]);
+
+    const variables2: QuestionNumberInput = {
+        questionNo
+    };
+    const variables: QuestionInput = {
+        questionNo,
+        imgUrl,
+        answer,
+        description
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     setLoading(false);
 
-    const [open, setOpen] = React.useState(false);
     const onClose = () => {
         setOpen(false);
+    };
+    const handleDelClose = () => {
+        setDelOpen(false);
+    };
+    if (!environment) return null;
+
+    const handleUpdate = () => {
+        updateQuestionCommit(environment, variables, {
+            onError: showError,
+            onCompleted: (response: any) => {
+                setSuccessMessage("Question Was Successfully Updated");
+                setSuccess(true);
+
+                setQuestionNo(0);
+                setAnswer("");
+                setDescription("");
+                setImgUrl("");
+                setUpdate(!update);
+                handleClose();
+            }
+        });
+    };
+    const handleSubmit = () => {
+        commit(environment, viewer.id, variables, {
+            onError: showError,
+            onCompleted: (response: any) => {
+                setLoading(false);
+                setSuccessMessage("Question Was Successfully Created");
+                setSuccess(true);
+
+                setQuestionNo(0);
+                setAnswer("");
+                setDescription("");
+                setImgUrl("");
+                setUpdate(!update);
+            }
+        });
+    };
+
+    const handleDelete = () => {
+        DeleteCommit(environment, variables2, {
+            onError: showError,
+            onCompleted: (response: any) => {
+                setLoading(false);
+                handleDelClose();
+                setSuccessMessage("Question Was Successfully Deleted");
+                setSuccess(true);
+
+                setQuestionNo(0);
+                setAnswer("");
+                setDescription("");
+                setImgUrl("");
+                setUpdate(!update);
+            }
+        });
     };
 
     const AdminSuccessMessageComponent = () => {
@@ -201,6 +272,17 @@ const AdminPanel: NextPage<AdminPanelProps> = ({
         );
     };
 
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        commitState(environment, !quiz, {
+            onError: showError,
+            onCompleted: (response: any) => {
+                setSuccessMessage("State was Successfully updated!");
+                setSuccess(true);
+            }
+        });
+        setQuiz(!quiz);
+    };
+
     const UpdateConatainer = () => {
         return (
             <div>
@@ -211,10 +293,10 @@ const AdminPanel: NextPage<AdminPanelProps> = ({
                     open={open}
                     onClose={onClose}
                     closeAfterTransition
-                    // BackdropComponent={Backdrop}
-                    // BackdropProps={{
-                    //     timeout: 500
-                    // }}
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                        timeout: 500
+                    }}
                 >
                     <Fade in={open}>
                         <div className={classes.paper}>
@@ -298,11 +380,6 @@ const AdminPanel: NextPage<AdminPanelProps> = ({
         );
     };
 
-    const [delOpen, setDelOpen] = React.useState(false);
-    const handleDelClose = () => {
-        setDelOpen(false);
-    };
-
     const ConfirmConatainer = () => {
         return (
             <div>
@@ -349,83 +426,6 @@ const AdminPanel: NextPage<AdminPanelProps> = ({
         );
     };
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        commitState(environment, !quiz, {
-            onError: showError,
-            onCompleted: (response: any) => {
-                setSuccessMessage("State was Successfully updated!");
-                setSuccess(true);
-            }
-        });
-        setQuiz(!quiz);
-    };
-    const [update, setUpdate] = React.useState(false);
-
-    const variables: QuestionInput = {
-        questionNo,
-        imgUrl,
-        answer,
-        description
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleUpdate = () => {
-        updateQuestionCommit(environment, variables, {
-            onError: showError,
-            onCompleted: (response: any) => {
-                setSuccessMessage("Question Was Successfully Updated");
-                setSuccess(true);
-
-                setQuestionNo(0);
-                setAnswer("");
-                setDescription("");
-                setImgUrl("");
-                setUpdate(!update);
-                handleClose();
-            }
-        });
-    };
-    const handleSubmit = () => {
-        commit(environment, viewer.id, variables, {
-            onError: showError,
-            onCompleted: (response: any) => {
-                setLoading(false);
-                setSuccessMessage("Question Was Successfully Updated");
-                setSuccess(true);
-
-                setQuestionNo(0);
-                setAnswer("");
-                setDescription("");
-                setImgUrl("");
-                setUpdate(!update);
-            }
-        });
-    };
-
-    const variables2: QuestionNumberInput = {
-        questionNo
-    };
-
-    const handleDelete = () => {
-        DeleteCommit(environment, variables2, {
-            onError: showError,
-            onCompleted: (response: any) => {
-                setLoading(false);
-                handleDelClose();
-                setSuccessMessage("Question Was Successfully Deleted");
-                setSuccess(true);
-
-                setQuestionNo(0);
-                setAnswer("");
-                setDescription("");
-                setImgUrl("");
-                setUpdate(!update);
-            }
-        });
-    };
     if (viewer.admin) {
         return (
             <div>
